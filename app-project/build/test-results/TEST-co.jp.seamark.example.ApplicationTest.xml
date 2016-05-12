@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="co.jp.seamark.example.ApplicationTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2016-05-12T07:20:29" hostname="Vostro-220s-Series" time="0.002">
-  <properties/>
-  <testcase name="test" classname="co.jp.seamark.example.ApplicationTest" time="0.002"/>
-  <system-out><![CDATA[Hello world!
-]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

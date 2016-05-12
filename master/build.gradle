@@ -29,6 +29,12 @@ buildscript {
 		hoge="123"
 	}
 }
+
+allprojects {
+	group = 'jp.co.seamark'
+	version = '0.1-SNAPSHOT'
+}
+
 println(hoge)
 subprojects {
 	apply plugin: 'java'
@@ -44,14 +50,17 @@ subprojects {
 	    testCompile 'junit:junit:4.12'
 	}
 	
-	tasks.withType(AbstractCompile)*.options*.encoding = "${defaultEnc}"
-	tasks.withType(GroovyCompile)*.groovyOptions*.encoding ="${defaultEnc}"
+	tasks.withType(AbstractCompile)*.options*.encoding = defaultEnc
+	tasks.withType(GroovyCompile)*.groovyOptions*.encoding = defaultEnc
 	
 	compileJava {
 		sourceCompatibility = javaVersion
 		targetCompatibility = javaVersion
 	}
 	
+	jar {
+		baseName = "${project.name}"
+	}
 }
 
 project(':app-project'){
@@ -63,6 +72,7 @@ project(':app-project'){
 		compile( "org.springframework.boot:spring-boot-starter" )
 	}
 	
+	mainClassName = 'jp.co.seamark.example.Application'
 	jar {
 		manifest {
 			attributes 'Main-Class' : 'jp.co.seamark.example.Application'
@@ -71,7 +81,74 @@ project(':app-project'){
 }
 
 project(':web-project'){
+	println(project.name)
 	apply plugin: 'spring-boot'
 
-	println(project.name)
+	dependencies {
+		compile( "org.springframework.boot:spring-boot-starter-web")
+	}
+}
+
+// for release
+subprojects { prj ->
+	apply plugin:'signing'
+	apply plugin:'maven'
+	apply plugin:'com.bmuschko.nexus'
+	
+//	group = 'jp.co.seamark'
+//	artifact = 'example'
+//	version = '0.1-SNAPSHOT'
+
+	if( prj.pluginManager.hasPlugin('spring-boot') ){
+		bootRepackage {
+			classifier = 'executable'
+		}
+	}
+	
+	modifyPom {
+		project {
+			name 'Example Project'
+			description 'Hogehoge'
+			
+			url 'https://github.com/kkamimura-seamark/example/wiki'
+			inceptionYear '2012'
+			
+			scm {
+				url 'https://github.com/kkamimura-seamark/example'
+				connection 'scm:https://github.com/kkamimura-seamark/example.git'
+				developerConnection 'scm:https://github.com/kkamimura-seamark/example.git'
+			}
+			
+			licenses {
+				license {
+					name 'The Apache Software License,Version 2.0'
+					url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+					distribution 'repo'
+				}
+			}
+		}
+	}
+	
+	extraArchive {
+		sources = false
+		tests = true
+		javadoc = false
+	}
+	
+	nexus {
+// TODO siging pluginを確認する
+//		sign = true
+		sign = false
+		repositoryUrl = 'http://192.168.0.92:8081/content/repositories/releases/'
+		snapshotRepositoryUrl = 'http://192.168.0.92:8081/content/repositories/snapshots/'
+	}
+	
+}
+task clean {
+}
+task build {
+
+}
+task uploadArchives {
+
 }
