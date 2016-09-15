@@ -1,0 +1,26 @@
+buildscript {
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.0.RELEASE")
+    }
+	repositories {
+	    jcenter()
+	    mavenCentral()
+	}
+
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+apply plugin: 'spring-boot'
+apply plugin: 'java'
+apply from : 'share/libswagger.gradle'
+
+dependencies {
+	compile 'org.springframework.boot:spring-boot-starter-web'
+	testCompile 'org.springframework.boot:spring-boot-starter-test'
+}
+
+apply plugin: VersionNextPlugin
