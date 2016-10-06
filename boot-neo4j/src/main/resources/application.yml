@@ -1,4 +1,5 @@
 spring:
   data:
     neo4j:
-      uri: file:///home/seamark/neo4j-db/sample.db
+      uri: http://neo4j:password@localhost:7474
+// uri: file:///home/seamark/neo4j-db/sample.db
